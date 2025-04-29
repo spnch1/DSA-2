@@ -59,38 +59,48 @@
 
             for (int i = 0; i < userCount; i++)
             {
-                if (i == targetUser)
-                    continue;
+                if (i == targetUser) continue;
+                
+                var comparisonArray = MapPreferences(
+                    preferences[targetUser],
+                    preferences[i]
+                );
 
-                var comparisonArray = MapPreferences
-                    (preferences[targetUser], preferences[i]);
+                Console.WriteLine(
+                    $"DEBUG: mapping for {targetUser + 1} vs {i + 1} -> " +
+                    $"[{string.Join(",", comparisonArray)}]"
+                );
+                
                 int inversions = CountInversions(comparisonArray);
+                Console.WriteLine($"DEBUG: inversions for {targetUser + 1} vs {i + 1} = {inversions}");
+
                 results.Add((i + 1, inversions));
             }
 
-            results.Sort((a, b) => a.inversion.CompareTo(b.inversion));
-            using (var writer = new StreamWriter(outputFile))
+            results.Sort((a, b) =>
             {
-                foreach (var (userId, inversions) in results)
-                {
-                    writer.WriteLine($"{userId} {inversions}");
-                }
-            }
+                int cmp = a.inversion.CompareTo(b.inversion);
+                return (cmp != 0) ? cmp : a.userId.CompareTo(b.userId);
+            });
+            
+            using var writer = new StreamWriter(outputFile);
+            writer.WriteLine(targetUser + 1);
+
+            foreach (var (userId, inversions) in results)
+                writer.WriteLine($"{userId} {inversions}");
         }
 
         static int[] MapPreferences(int[] refList, int[] compList)
         {
-            int[] indexMap = new int[refList.Length];
-            for (int i = 0; i < compList.Length; i++)
-            {
-                indexMap[compList[i] - 1] = i;
-            }
-            
-            int[] result = new int[refList.Length];
-            for (int i = 0; i < refList.Length; i++)
-            {
-                result[i] = indexMap[refList[i] - 1];
-            }
+            Console.WriteLine("DEBUG: in updated MapPreferences");
+            int M = refList.Length;
+            var position = new Dictionary<int,int>(M);
+            for (int j = 0; j < M; j++)
+                position[compList[j]] = j;
+
+            int[] result = new int[M];
+            for (int i = 0; i < M; i++)
+                result[i] = position[refList[i]];
 
             return result;
         }
