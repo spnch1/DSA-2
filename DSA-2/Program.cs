@@ -92,16 +92,33 @@
 
         static int[] MapPreferences(int[] refList, int[] compList)
         {
-            Console.WriteLine("DEBUG: in updated MapPreferences");
             int M = refList.Length;
-            var position = new Dictionary<int,int>(M);
-            for (int j = 0; j < M; j++)
-                position[compList[j]] = j;
-
+    
+            int[] refIndices = Enumerable.Range(0, M).ToArray();
+            int[] compIndices = Enumerable.Range(0, M).ToArray();
+            
+            Array.Sort(refIndices, (a, b) => {
+                int cmp = refList[b].CompareTo(refList[a]);
+                return cmp != 0 ? cmp : a.CompareTo(b);
+            });
+    
+            Array.Sort(compIndices, (a, b) => {
+                int cmp = compList[b].CompareTo(compList[a]);
+                return cmp != 0 ? cmp : a.CompareTo(b);
+            });
+            
+            var compRanks = new Dictionary<int, int>();
+            for (int rank = 0; rank < compIndices.Length; rank++)
+            {
+                compRanks[compIndices[rank]] = rank;
+            }
+    
             int[] result = new int[M];
-            for (int i = 0; i < M; i++)
-                result[i] = position[refList[i]];
-
+            for (int i = 0; i < refIndices.Length; i++)
+            {
+                result[i] = compRanks[refIndices[i]];
+            }
+    
             return result;
         }
         
