@@ -43,9 +43,9 @@
             int userCount = header[0];
             int movieCount = header[1];
 
-            int[][] preferences = new int[userCount][];
-            if (preferences == null)
-                throw new ArgumentNullException(nameof(preferences));
+            int[][] userPreferences = new int[userCount][];
+            if (userPreferences == null)
+                throw new ArgumentNullException(nameof(userPreferences));
 
             if (lines.Length < userCount + 1)
             {
@@ -62,7 +62,7 @@
                     return;
                 }
                 var parts = lineParts.Skip(1).Select(int.Parse).ToArray();
-                preferences[i] = parts;
+                userPreferences[i] = parts;
             }
 
             int targetUser = int.Parse(targetUserArg) - 1;
@@ -79,9 +79,9 @@
             {
                 if (i == targetUser) continue;
                 
-                var comparisonArray = MapPreferences(
-                    preferences[targetUser],
-                    preferences[i]
+                var comparisonArray = MapUserPreferences(
+                    userPreferences[targetUser],
+                    userPreferences[i]
                 );
 
                 if (debugMode)
@@ -113,7 +113,7 @@
                 writer.WriteLine($"{userId} {inversions}");
         }
 
-        static int[] MapPreferences(int[] refList, int[] compList)
+        static int[] MapUserPreferences(int[] refList, int[] compList)
         {
             int M = refList.Length;
     
