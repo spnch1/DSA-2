@@ -23,7 +23,7 @@
             
             if (string.IsNullOrEmpty(inputFile) || string.IsNullOrEmpty(targetUserArg) || !debugMode && args.Length != 2)
             {
-                Console.WriteLine("Usage: DSA_2 [--debug | -d] <input_file> <target_user>");
+                Console.WriteLine("Usage: DSA-2 [--debug | -d] <input_file> <target_user>");
                 return;
             }
             
