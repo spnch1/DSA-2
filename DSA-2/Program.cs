@@ -8,15 +8,13 @@
             string inputFile = string.Empty;
             string targetUserArg = string.Empty;
             int argIndex = 0;
-
-            // Check if first argument is debug flag
+            
             if (args.Length > 0 && (args[0] == "--debug" || args[0] == "-d"))
             {
                 debugMode = true;
                 argIndex = 1;
             }
-
-            // Get required arguments
+            
             if (args.Length > argIndex)
                 inputFile = args[argIndex++];
                 
@@ -35,8 +33,9 @@
                 return;
             }
             
+            string inputFileBaseName = Path.GetFileNameWithoutExtension(inputFile);
             string outputFile = Path.GetFileNameWithoutExtension
-                (System.Reflection.Assembly.GetEntryAssembly()?.Location) + "_" + inputFile + "_output.txt";
+                (System.Reflection.Assembly.GetEntryAssembly()?.Location) + "_" + inputFileBaseName + "_output.txt";
             
             var lines = File.ReadAllLines(inputFile);
             var header = lines[0].Split().Select(int.Parse).ToArray();
@@ -45,7 +44,8 @@
             int movieCount = header[1];
 
             int[][] preferences = new int[userCount][];
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
+            if (preferences == null)
+                throw new ArgumentNullException(nameof(preferences));
 
             if (lines.Length < userCount + 1)
             {
@@ -55,7 +55,7 @@
             
             for (int i = 0; i < userCount; i++)
             {
-                var lineParts = lines[i + 1].Trim().Split([' ', '\t'], StringSplitOptions.RemoveEmptyEntries);
+                var lineParts = lines[i + 1].Trim().Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 if (lineParts.Length != movieCount + 1)
                 {
                     Console.WriteLine($"Invalid data at line {i + 2}: expected {movieCount + 1} values, got {lineParts.Length}");
@@ -93,7 +93,9 @@
                 int inversions = CountInversions(comparisonArray);
                 
                 if (debugMode)
+                {
                     Console.WriteLine($"DEBUG: inversions for {targetUser + 1} vs {i + 1} = {inversions}");
+                }
 
                 results.Add((i + 1, inversions));
             }
@@ -130,15 +132,11 @@
             
             var compRanks = new Dictionary<int, int>();
             for (int rank = 0; rank < compIndices.Length; rank++)
-            {
                 compRanks[compIndices[rank]] = rank;
-            }
     
             int[] result = new int[M];
             for (int i = 0; i < refIndices.Length; i++)
-            {
                 result[i] = compRanks[refIndices[i]];
-            }
     
             return result;
         }
@@ -162,7 +160,6 @@
             }
             return invCount;
         }
-        
         static int Merge(int[] arr, int[] temp, int left, int mid, int right)
         {
             int i = left;
