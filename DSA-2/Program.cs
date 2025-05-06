@@ -21,7 +21,7 @@
             if (args.Length > argIndex)
                 targetUserArg = args[argIndex];
             
-            if (string.IsNullOrEmpty(inputFile) || string.IsNullOrEmpty(targetUserArg))
+            if (string.IsNullOrEmpty(inputFile) || string.IsNullOrEmpty(targetUserArg) || !debugMode && args.Length != 2)
             {
                 Console.WriteLine("Usage: DSA_2 [--debug | -d] <input_file> <target_user>");
                 return;
