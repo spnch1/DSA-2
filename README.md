@@ -1,4 +1,4 @@
-somthing about decomposition, merge sorts and inversion searching
+something about decomposition, merge sorts, and inversion searching
 
 usage:
 ```
